@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.EnhancedTouch;
@@ -26,7 +27,15 @@ public class InputHandler : MonoBehaviour
             }
             else if (Touch.activeTouches[0].phase == TouchPhase.Ended)
             {
-                if (!EventSystem.current.IsPointerOverGameObject())
+                PointerEventData pointerData = new PointerEventData(EventSystem.current)
+                {
+                    position = screenPos
+                };
+
+                List<RaycastResult> results = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(pointerData, results);
+
+                if (results.Count == 0)
                 {
                     Vector3 targetPos = Camera.main.ScreenToWorldPoint(screenPos);
                     targetPos.z = 0;
