@@ -27,15 +27,7 @@ public class InputHandler : MonoBehaviour
             }
             else if (Touch.activeTouches[0].phase == TouchPhase.Ended)
             {
-                PointerEventData pointerData = new PointerEventData(EventSystem.current)
-                {
-                    position = screenPos
-                };
-
-                List<RaycastResult> results = new List<RaycastResult>();
-                EventSystem.current.RaycastAll(pointerData, results);
-
-                if (results.Count == 0)
+                if (!IsPointerOverUIElement(screenPos))
                 {
                     Vector3 targetPos = Camera.main.ScreenToWorldPoint(screenPos);
                     targetPos.z = 0;
@@ -43,5 +35,18 @@ public class InputHandler : MonoBehaviour
                 }
             }
         }
+    }
+
+    private bool IsPointerOverUIElement(Vector3 screenPos)
+    {
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = screenPos
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        return results.Count > 0;
     }
 }
